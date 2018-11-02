@@ -23,16 +23,18 @@ services:
     environment:
       - CORE_CONF_fs_defaultFS=hdfs://namenode:8020
   gateway:
-    image: uhopper/hadoop-datanode
+    build:
+      context: .
+      dockerfile: gateway/Dockerfile
     hostname: gateway
     container_name: gateway
     domainname: hadoop
     networks:
       - hadoop
-    volumes:
-      - datanode:/hadoop/dfs/data
     environment:
       - CORE_CONF_fs_defaultFS=hdfs://namenode:8020
+    depends_on:
+      - broker
   broker:
     build:
       context: .
@@ -42,10 +44,17 @@ services:
     domainname: hadoop
     networks:
       - hadoop
-    volumes:
-      - datanode:/hadoop/dfs/data
-    environment:
-      - CORE_CONF_fs_defaultFS=hdfs://namenode:8020
+    depends_on:
+      - zookeeper
+  zookeeper:
+    build:
+      context: .
+      dockerfile: zookeeper/Dockerfile
+    hostname: zookeeper
+    container_name: zookeeper
+    domainname: hadoop
+    networks:
+      - hadoop
   nodemanager:
     image: uhopper/hadoop-nodemanager
     hostname: nodemanager1
