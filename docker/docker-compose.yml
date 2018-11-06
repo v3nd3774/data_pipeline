@@ -57,6 +57,21 @@ services:
     domainname: hadoop
     networks:
       - hadoop
+  flume:
+    build:
+      context: .
+      dockerfile: docker/flume/Dockerfile
+    hostname: flume
+    container_name: flume
+    domainname: hadoop
+    networks:
+      - hadoop
+    environment:
+      - CORE_CONF_fs_defaultFS=hdfs://namenode:8020
+    depends_on:
+      - broker
+      - datanode
+      - namenode
   nodemanager:
     image: uhopper/hadoop-nodemanager
     hostname: nodemanager1
