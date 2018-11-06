@@ -2,10 +2,10 @@
 docker-compose \
   -p data_pipeline \
   -f docker/docker-compose.yml \
-  --project-directory docker \
+  --project-directory . \
   down
 docker-compose \
   -p data_pipeline \
   -f docker/docker-compose.yml \
-  --project-directory docker \
+  --project-directory . \
   up -d --build

@@ -25,7 +25,7 @@ services:
   gateway:
     build:
       context: .
-      dockerfile: gateway/Dockerfile
+      dockerfile: docker/gateway/Dockerfile
     hostname: gateway
     container_name: gateway
     domainname: hadoop
@@ -39,7 +39,7 @@ services:
       - namenode
   broker:
     build:
-      context: .
+      context: docker
       dockerfile: broker/Dockerfile
     hostname: broker
     container_name: broker
@@ -50,7 +50,7 @@ services:
       - zookeeper
   zookeeper:
     build:
-      context: .
+      context: docker
       dockerfile: zookeeper/Dockerfile
     hostname: zookeeper
     container_name: zookeeper
