@@ -3,6 +3,8 @@ WORKDIR /opt
 RUN curl http://apache.cs.utah.edu/kafka/0.10.2.2/kafka_2.10-0.10.2.2.tgz | \
   tar -xz && mv kafka_2.10-0.10.2.2 kafka
 RUN apt-get update && apt-get install -y dos2unix
+RUN apt-get install -y openjdk-8-jdk-headless
+RUN apt-get install -y dnsutils
 ENV KAFKA_HOME /opt/kafka
 ENV PATH $KAFKA_HOME/bin:$PATH
 COPY scripts/healthcheck.sh /utilities/healthcheck.sh
