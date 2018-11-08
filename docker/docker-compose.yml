@@ -1,5 +1,11 @@
 version: '3.4'
 services:
+  base_image:
+    build:
+      context: .
+      dockerfile: docker/base_image/Dockerfile
+    environment:
+      - CORE_CONF_fs_defaultFS=hdfs://namenode:8020
   namenode:
     image: uhopper/hadoop-namenode
     hostname: namenode

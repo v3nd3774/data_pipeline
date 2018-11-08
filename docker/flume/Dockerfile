@@ -1,17 +1,9 @@
-FROM uhopper/hadoop-datanode
-WORKDIR /opt
+FROM datapipeline_base_image
 RUN curl http://apache.cs.utah.edu/flume/1.8.0/apache-flume-1.8.0-bin.tar.gz | \
   tar -xz && mv apache-flume-1.8.0-bin flume
-RUN apt-get update && apt-get install -y dos2unix
-RUN apt-get install -y openjdk-8-jdk-headless
-RUN apt-get install -y dnsutils
 ENV FLUME_HOME /opt/flume
 ENV PATH $FLUME_HOME/bin:$PATH
 ENV agent_name data_pipeline
-COPY docker/scripts/healthcheck.sh /utilities/healthcheck.sh
-COPY docker/scripts/flume_agent_alive.sh /utilities/flume_agent_alive.sh
-COPY docker/scripts/start_flume_agent.sh /utilities/start_flume_agent.sh
-COPY docker/scripts/add_datanode_ip_to_hosts.sh /utilities/add_datanode_ip_to_hosts.sh
-COPY flafka/data_pipeline.config /opt/flume/data_pipeline.config
-RUN find /utilities -type f -print0 | xargs -0 dos2unix
+COPY flafka/data_pipeline.config data_pipeline.config
+RUN mv data_pipeline.config $FLUME_HOME/data_pipeline.config
 CMD /utilities/start_flume_agent.sh

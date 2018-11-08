@@ -1,21 +1,12 @@
-FROM uhopper/hadoop-datanode
-WORKDIR /opt
+FROM datapipeline_base_image
 RUN curl http://apache.cs.utah.edu/kafka/0.10.2.2/kafka_2.10-0.10.2.2.tgz | \
-  tar -xz && mv kafka_2.10-0.10.2.2 kafka && mkdir /utilities
-RUN apt-get -y update && apt-get -y install python-pip python-dev build-essential vim dos2unix
-RUN apt-get install -y openjdk-8-jdk-headless
-RUN apt-get install -y dnsutils
+  tar -xz && mv kafka_2.10-0.10.2.2 kafka
+RUN curl -o Anaconda2Install.sh https://repo.continuum.io/archive/Anaconda2-5.3.0-Linux-x86_64.sh
+RUN bash Anaconda2Install.sh -b && rm Anaconda2Install.sh
+ENV ANACONDA_HOME /root/anaconda2
 ENV KAFKA_HOME /opt/kafka
-ENV PATH $KAFKA_HOME/bin:$PATH
-COPY docker/scripts/healthcheck.sh /utilities/healthcheck.sh
-COPY docker/scripts/set_zookeeper_address.sh /utilities/set_zookeeper_address.sh
-COPY docker/scripts/create_topic.sh /utilities/create_topic.sh
-COPY docker/scripts/start_gateway.sh /utilities/start_gateway.sh
-COPY docker/scripts/brokers_alive.sh /utilities/brokers_alive.sh
-COPY docker/scripts/twitter_topic_exist.sh /utilities/twitter_topic_exist.sh
-COPY docker/scripts/add_datanode_ip_to_hosts.sh /utilities/add_datanode_ip_to_hosts.sh
+ENV PATH $KAFKA_HOME/bin:$ANACONDA_HOME/bin:$PATH
 COPY producer /producer
-RUN find /utilities -type f -print0 | xargs -0 dos2unix
 RUN  pip install -r /producer/requirements.txt
 RUN /utilities/set_zookeeper_address.sh
 CMD /utilities/start_gateway.sh
