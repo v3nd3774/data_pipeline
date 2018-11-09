@@ -55,9 +55,7 @@ services:
       - datanode1
       - namenode
   broker:
-    build:
-      context: docker
-      dockerfile: broker/Dockerfile
+    image: wurstmeister/kafka
     hostname: broker
     container_name: broker
     domainname: hadoop
@@ -65,15 +63,20 @@ services:
       - hadoop
     depends_on:
       - zookeeper
+    environment:
+      - KAFKA_CREATE_TOPICS=twitter:1:1,channel:1:1
+      - KAFKA_ADVERTISED_HOST_NAME=broker
+      - KAFKA_ADVERTISED_PORT=9092
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_ZOOKEEPER_TIMEOUT_MS=30000
   zookeeper:
-    build:
-      context: docker
-      dockerfile: zookeeper/Dockerfile
+    image: zookeeper
     hostname: zookeeper
     container_name: zookeeper
     domainname: hadoop
     networks:
       - hadoop
+    restart: always
   flume:
     build:
       context: .
@@ -131,8 +134,23 @@ services:
       - gateway
       - datanode1
       - namenode
+      - kafka_exporter
     ports:
       - "9090:9090"
+  kafka_exporter:
+    image: danielqsj/kafka-exporter
+    command: --kafka.server=broker:9092 --web.listen-address=1337
+    hostname: kafka_exporter
+    container_name: kafka_exporter
+    domainname: hadoop
+    networks:
+      - hadoop
+    depends_on:
+      - broker
+      - zookeeper
+    ports:
+      - "1337:1337"
+    restart: on-failure:30
 networks:
   hadoop:
 volumes:

@@ -7,3 +7,4 @@ if [ "$?" -eq 0 ];then
 else
   exit 1
 fi
+tail -f /dev/null
