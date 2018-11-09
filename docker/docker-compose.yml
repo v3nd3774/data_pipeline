@@ -115,6 +115,24 @@ services:
       - YARN_CONF_yarn_log___aggregation___enable=true
     depends_on:
       - namenode
+  prometheus:
+    build:
+      context: .
+      dockerfile: docker/prometheus/Dockerfile
+    hostname: prometheus
+    container_name: prometheus
+    domainname: hadoop
+    networks:
+      - hadoop
+    depends_on:
+      - broker
+      - zookeeper
+      - flume
+      - gateway
+      - datanode1
+      - namenode
+    ports:
+      - "9090:9090"
 networks:
   hadoop:
 volumes:
