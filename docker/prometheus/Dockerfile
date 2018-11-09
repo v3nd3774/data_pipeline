@@ -1,6 +1,8 @@
 FROM datapipeline_base_image
-RUN curl https://github.com/prometheus/prometheus/releases/download/v2.5.0/prometheus-2.5.0.linux-amd64.tar.gz | \
-  tar -xz && mv prometheus-2.5.0.linux-amd64 prometheus
+ENV prometheus_url https://github.com/prometheus/prometheus/releases/download/v2.5.0/prometheus-2.5.0.linux-amd64.tar.gz
+RUN curl -s -L "$prometheus_url" | \
+  tar -xvz && \
+  mv $(echo "${prometheus_url##*/}" | perl -pe 's/(.*?)\.tar\.gz/\1/') prometheus
 ENV PROMETHEUS_HOME /opt/prometheus
 ENV PATH $PROMETHEUS_HOME:$PATH
 COPY prometheus/prometheus_config.yml prometheus_config.yml
