@@ -54,6 +54,7 @@ services:
       - broker
       - datanode1
       - namenode
+    restart: always
   broker:
     image: wurstmeister/kafka
     hostname: broker
@@ -150,7 +151,15 @@ services:
       - zookeeper
     ports:
       - "1337:1337"
-    restart: on-failure:30
+    restart: always
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - kafka_exporter
+      - prometheus
 networks:
   hadoop:
 volumes:
