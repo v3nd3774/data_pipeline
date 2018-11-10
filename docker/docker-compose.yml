@@ -139,7 +139,7 @@ services:
       - "9090:9090"
   kafka_exporter:
     image: danielqsj/kafka-exporter
-    command: --kafka.server=broker:9092 --web.listen-address=1337
+    command: --kafka.server=broker:9092 --web.listen-address=0.0.0.0:1337
     hostname: kafka_exporter
     container_name: kafka_exporter
     domainname: hadoop
