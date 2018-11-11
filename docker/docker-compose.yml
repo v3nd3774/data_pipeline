@@ -153,10 +153,20 @@ services:
       - "1337:1337"
     restart: always
   grafana:
-    image: grafana/grafana
+    build:
+      context: .
+      dockerfile: docker/grafana/Dockerfile
+    hostname: grafana
     container_name: grafana
+    domainname: hadoop
+    networks:
+      - hadoop
     ports:
       - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=michael
+      - GF_SECURITY_ADMIN_PASSWORD=myers
+      - GF_USERS_ALLOW_SIGN_UP=false
     depends_on:
       - kafka_exporter
       - prometheus

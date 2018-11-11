@@ -8,5 +8,6 @@ kafka_options = {
   'value_serializer':lambda v: v.encode('utf-8')
 }
 producer = KafkaProducer(**kafka_options)
-for post_title in Reddit().poll():
-  producer.send(topic, post_title).get(timeout=timeout_in_sec)
+for posts in Reddit().poll():
+  for post_title in posts:
+    producer.send(topic, post_title).get(timeout=timeout_in_sec)
