@@ -1,0 +1,5 @@
+# HELP {{ metric_prefix }} Miscellaneous stats on the {{ dir }} HDFS directory
+# TYPE {{ metric_prefix }} gauge
+{% for key, value in metrics.items() %}
+{{ metric_prefix ~ "_" ~ key }} {{ value }}
+{% endfor %}
