@@ -5,12 +5,6 @@ app = Flask(__name__)
 print __name__
 print "ARGS=%s" % str(sys.argv)
 
-def health_check():
-  c = Client("namenode",8020)
-  for top_level in c.ls(['/']):
-    print "ROOT DIR CHILD=%s" % top_level['path']
-health_check()
-
 @app.route("/")
 def index():
   print "Recieved index request..."
@@ -37,6 +31,15 @@ def metrics():
 
 if __name__ == "__main__":
   print "Running Flask Application"
+
+  def health_check():
+    c = Client("namenode",8020)
+    print "Checking for %s directory..." % sys.argv[1]
+    for top_level in c.ls([sys.argv[1]]):
+      print "DIR CHILD=%s" % top_level['path']
+    print "Ok!"
+  health_check()
+
   server_parameters = {
     'host':"0.0.0.0",
     'threaded': True,
