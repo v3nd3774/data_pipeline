@@ -4,7 +4,7 @@ services:
     build:
       context: .
       dockerfile: docker/base_image/Dockerfile
-    image: datapipeline_base_image
+    image: v3nd3774/data_pipeline:base_image
     environment:
       - CORE_CONF_fs_defaultFS=hdfs://namenode:8020
   namenode:
@@ -43,6 +43,7 @@ services:
     build:
       context: .
       dockerfile: docker/gateway/Dockerfile
+    image: v3nd3774/data_pipeline:gateway
     hostname: gateway
     container_name: gateway
     domainname: hadoop
@@ -83,6 +84,7 @@ services:
     build:
       context: .
       dockerfile: docker/flume/Dockerfile
+    image: v3nd3774/data_pipeline:flume
     hostname: flume
     container_name: flume
     domainname: hadoop
@@ -99,6 +101,7 @@ services:
     build:
       context: .
       dockerfile: docker/prometheus/Dockerfile
+    image: v3nd3774/data_pipeline:prometheus
     hostname: prometheus
     container_name: prometheus
     domainname: hadoop
@@ -132,6 +135,7 @@ services:
     build:
       context: .
       dockerfile: docker/hdfs_directory_exporter/Dockerfile
+    image: v3nd3774/data_pipeline:hdfs_directory_exporter
     hostname: hdfs_directory_exporter
     container_name: hdfs_directory_exporter
     domainname: hadoop
@@ -150,6 +154,7 @@ services:
     build:
       context: .
       dockerfile: docker/grafana/Dockerfile
+    image: v3nd3774/data_pipeline:grafana
     hostname: grafana
     container_name: grafana
     domainname: hadoop
