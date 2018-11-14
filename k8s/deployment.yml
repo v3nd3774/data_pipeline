@@ -1,0 +1,125 @@
+--- 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: data_pipeline
+spec:
+  selector:
+    matchLabels:
+      app: data_pipeline
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: data_pipeline
+    spec:
+      containers:
+      - name: namenode
+        image: uhopper/hadoop-namenode
+        volumeMounts:
+        - name: namenode
+          mountPath: /hadoop/dfs/name
+        env:
+        - name: CORE_CONF_fs_defaultFS
+          value: hdfs://namenode:8020
+        - name: HDFS_CONF_dfs_replication
+          value: 1
+        - name: CLUSTER_NAME
+          value: data_pipeline_cluster
+        ports:
+        - containerPort: 50070
+      - name: datanode1
+        image: uhopper/hadoop-namenode
+        volumeMounts:
+        - name: datanode1
+          mountPath: /hadoop/dfs/data
+        env:
+        - name: CORE_CONF_fs_defaultFS
+          value: hdfs://namenode:8020
+        - name: HDFS_CONF_dfs_replication
+          value: 1
+        - name: CLUSTER_NAME
+          value: data_pipeline_cluster
+        ports:
+        - containerPort: 50075
+      - name: gateway
+        image: v3nd3774/data_pipeline:gateway
+        env:
+        - name: CORE_CONF_fs_defaultFS
+          value: hdfs://namenode:8020
+      - name: broker
+        image: wurstmeister/kafka
+        env:
+        - name: KAFKA_CREATE_TOPICS
+          value: twitter:1:1,channel:1:1
+        - name: KAFKA_ADVERTISED_HOST_NAME
+          value: broker
+        - name: KAFKA_ADVERTISED_PORT
+          value: 9092
+        - name: KAFKA_ZOOKEEPER_CONNECT
+          value: zookeeper:2181
+        - name: KAFKA_ZOOKEEPER_TIMEOUT_MS
+          value: 30000
+      - name: zookeeper
+        image: zookeeper
+      - name: flume
+        image: v3nd3774/data_pipeline:flume
+        env:
+        - name: CORE_CONF_fs_defaultFS
+          value: hdfs://namenode:8020
+      - name: prometheus
+        image: v3nd3774/data_pipeline:prometheus
+      - name: kafka_exporter
+        image: danielqsj/kafka-exporter
+        command: ['--kafka.server=broker:9092', "--web.listen-address=0.0.0.0:1337"]
+      - name: hdfs_directory_exporter
+        image: v3nd3774/data_pipeline:hdfs_directory_exporter
+        env:
+        - name: CORE_CONF_fs_defaultFS
+          value: hdfs://namenode:8020
+        ports:
+        - containerPort: 42069
+      - name: grafana
+        image: v3nd3774/data_pipeline:grafana
+        env:
+        - name: GF_SECURITY_ADMIN_USER
+          value: michael
+        - name: GF_SECURITY_ADMIN_PASSWORD
+          value: myers
+        - name: GF_USERS_ALLOW_SIGN_UP
+          value: false
+        ports:
+        - containerPort: 3000
+      volumes:
+      - name: namenode
+        persistentVolumeClaim:
+          claimName: namenode
+      - name: datanode1
+        persistentVolumeClaim:
+          claimName: datanode1
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: namenode
+  labels:
+    app: data_pipeline
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 128Mi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: datanode1
+  labels:
+    app: data_pipeline
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 128Mi
