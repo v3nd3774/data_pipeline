@@ -178,7 +178,13 @@ spec:
   ports:
     - protocol: TCP
       port: 50075
+      name: hadoopwebui
+    - protocol: TCP
+      port: 50010
       name: hadoopdataport
+    - protocol: TCP
+      port: 50020
+      name: hadoopmetadataport
   type: LoadBalancer
 ---
 apiVersion: apps/v1
