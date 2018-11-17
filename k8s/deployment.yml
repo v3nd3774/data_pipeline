@@ -278,6 +278,7 @@ spec:
       name: hdfsexporterweblistenport
   type: LoadBalancer
 ---
+# for some reason prometheus isn't scraping kafka-exporter. maybe add dependency to kafka-exporter?
 apiVersion: apps/v1
 kind: Deployment
 metadata:
