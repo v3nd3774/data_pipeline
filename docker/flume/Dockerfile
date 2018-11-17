@@ -1,4 +1,4 @@
-FROM datapipeline_base_image
+FROM v3nd3774/data_pipeline:base-image
 RUN curl http://apache.cs.utah.edu/flume/1.8.0/apache-flume-1.8.0-bin.tar.gz | \
   tar -xz && mv apache-flume-1.8.0-bin flume
 ENV FLUME_HOME /opt/flume

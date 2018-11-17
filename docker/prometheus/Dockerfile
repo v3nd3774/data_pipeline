@@ -1,4 +1,4 @@
-FROM datapipeline_base_image
+FROM v3nd3774/data_pipeline:base-image
 ENV prometheus_url https://github.com/prometheus/prometheus/releases/download/v2.5.0/prometheus-2.5.0.linux-amd64.tar.gz
 RUN curl -s -L "$prometheus_url" | \
   tar -xvz && \

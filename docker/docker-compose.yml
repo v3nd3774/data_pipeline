@@ -1,10 +1,10 @@
 version: '3.4'
 services:
-  base_image:
+  base-image:
     build:
       context: .
       dockerfile: docker/base_image/Dockerfile
-    image: v3nd3774/data_pipeline:base_image
+    image: v3nd3774/data_pipeline:base-image
     environment:
       - CORE_CONF_fs_defaultFS=hdfs://namenode:8020
   namenode:
@@ -114,10 +114,10 @@ services:
       - gateway
       - datanode1
       - namenode
-      - kafka_exporter
+      - kafka-exporter
     ports:
       - "9090:9090"
-  kafka_exporter:
+  kafka-exporter:
     image: danielqsj/kafka-exporter
     command: --kafka.server=broker:9092 --web.listen-address=0.0.0.0:1337
     hostname: kafka_exporter
@@ -131,11 +131,11 @@ services:
     ports:
       - "1337:1337"
     restart: always
-  hdfs_directory_exporter:
+  hdfs-directory-exporter:
     build:
       context: .
       dockerfile: docker/hdfs_directory_exporter/Dockerfile
-    image: v3nd3774/data_pipeline:hdfs_directory_exporter
+    image: v3nd3774/data_pipeline:hdfs-directory-exporter
     hostname: hdfs_directory_exporter
     container_name: hdfs_directory_exporter
     domainname: hadoop
@@ -167,7 +167,7 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=myers
       - GF_USERS_ALLOW_SIGN_UP=false
     depends_on:
-      - kafka_exporter
+      - kafka-exporter
       - prometheus
 networks:
   hadoop:

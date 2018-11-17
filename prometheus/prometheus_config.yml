@@ -5,4 +5,4 @@ rule_files:
 scrape_configs:
   - job_name: prometheus
     static_configs:
-      - targets: ['localhost:9090', 'kafka_exporter:1337', 'hdfs_directory_exporter:42069']
+      - targets: ['localhost:9090', 'kafka-exporter:1337', 'hdfs-directory-exporter:42069']

@@ -1,4 +1,4 @@
-FROM datapipeline_base_image
+FROM v3nd3774/data_pipeline:base-image
 RUN apt-get install -y build-essential python-pip
 RUN curl http://apache.cs.utah.edu/kafka/0.10.2.2/kafka_2.10-0.10.2.2.tgz | \
   tar -xz && mv kafka_2.10-0.10.2.2 kafka
